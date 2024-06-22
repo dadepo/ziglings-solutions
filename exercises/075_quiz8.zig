@@ -49,7 +49,7 @@ const Path = struct {
 //
 // Please fill in the body of this function!
 fn makePath(from: *Place, to: *Place, dist: u8) Path {
-
+    return Path{ .from = from, .to = to, .dist = dist };
 }
 
 // Using our new function, these path definitions take up considerably less
@@ -154,21 +154,13 @@ pub fn main() void {
     const start = &a; // Archer's Point
     const destination = &f; // Fox Pond
 
-    // We could either have this:
-    //
-    //   a.paths = a_paths[0..];
-    //   b.paths = b_paths[0..];
-    //   c.paths = c_paths[0..];
-    //   d.paths = d_paths[0..];
-    //   e.paths = e_paths[0..];
-    //   f.paths = f_paths[0..];
-    //
-    // or this comptime wizardry:
-    //
-    const letters = [_][]const u8{ "a", "b", "c", "d", "e", "f" };
-    inline for (letters) |letter| {
-        @field(@This(), letter).paths = @field(@This(), letter ++ "_paths")[0..];
-    }
+    // TODO: can we neaten this up????
+    a.paths = a_paths[0..];
+    b.paths = b_paths[0..];
+    c.paths = c_paths[0..];
+    d.paths = d_paths[0..];
+    e.paths = e_paths[0..];
+    f.paths = f_paths[0..];
 
     var notebook = HermitsNotebook{};
     var working_note = NotebookEntry{

@@ -41,7 +41,10 @@
 const print = @import("std").debug.print;
 
 // The grue is a nod to Zork.
-const TripError = error{ Unreachable, EatenByAGrue };
+const TripError = error{
+Unreachable,
+EatenByAGrue,
+};
 
 // Let's start with the Places on the map. Each has a name and a
 // distance or difficulty of travel (as judged by the hermit).
@@ -53,7 +56,7 @@ const TripError = error{ Unreachable, EatenByAGrue };
 const Place = struct {
     name: []const u8,
     paths: []const Path = undefined,
-};
+    };
 
 var a = Place{ .name = "Archer's Point" };
 var b = Place{ .name = "Bridge" };
@@ -97,7 +100,7 @@ const Path = struct {
     from: *const Place,
     to: *const Place,
     dist: u8,
-};
+    };
 
 // By the way, if the following code seems like a lot of tedious
 // manual labor, you're right! One of Zig's killer features is letting
@@ -189,11 +192,11 @@ const TripItem = union(enum) {
     // types of item correctly.
     fn printMe(self: TripItem) void {
         switch (self) {
-            // Oops! The hermit forgot how to capture the union values
-            // in a switch statement. Please capture both values as
-            // 'p' so the print statements work!
-            .place => print("{s}", .{p.name}),
-            .path => print("--{}->", .{p.dist}),
+        // Oops! The hermit forgot how to capture the union values
+        // in a switch statement. Please capture both values as
+        // 'p' so the print statements work!
+            .place => |p| print("{s}", .{p.name}),
+            .path => |p| print("--{}->", .{p.dist}),
         }
     }
 };
@@ -209,7 +212,7 @@ const NotebookEntry = struct {
     coming_from: ?*const Place,
     via_path: ?*const Path,
     dist_to_reach: u16,
-};
+    };
 
 // +------------------------------------------------+
 // |              ~ Hermit's Notebook ~             |
@@ -255,7 +258,7 @@ const HermitsNotebook = struct {
             // dereference and optional value "unwrapping" look
             // together. Remember that you return the address with the
             // "&" operator.
-            if (place == entry.*.?.place) return entry;
+            if (place == entry.*.?.place) return &entry.*.?;
             // Try to make your answer this long:__________;
         }
         return null;
@@ -309,7 +312,7 @@ const HermitsNotebook = struct {
     //
     // Looks like the hermit forgot something in the return value of
     // this function. What could that be?
-    fn getTripTo(self: *HermitsNotebook, trip: []?TripItem, dest: *Place) void {
+    fn getTripTo(self: *HermitsNotebook, trip: []?TripItem, dest: *Place) !void {
         // We start at the destination entry.
         const destination_entry = self.getEntry(dest);
 

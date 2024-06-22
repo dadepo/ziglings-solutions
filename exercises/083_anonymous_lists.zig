@@ -19,7 +19,11 @@ pub fn main() void {
     // Don't change this part:
     //
     //     = .{ 'h', 'e', 'l', 'l', 'o' };
-    //
-    const hello = .{ 'h', 'e', 'l', 'l', 'o' };
+
+    // print("{s}", @typeName(@TypeOf(hello1)));
+
+    const hello: [5]u8 = .{ 'h', 'e', 'l', 'l', 'o' };
+
+    // print("{s}", @typeName(@TypeOf(hello)));
     print("I say {s}!\n", .{hello});
 }
